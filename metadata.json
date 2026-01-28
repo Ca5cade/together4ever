@@ -1,0 +1,8 @@
+{
+  "name": "Together4Ever",
+  "description": "A responsive social platform to connect with friends, share fast status updates with AI assistance, and chat privately.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
