@@ -630,7 +630,7 @@ const App: React.FC = () => {
       <div className="space-y-6">
         <div className="bg-slate-900 rounded-xl shadow-lg border border-slate-800 p-6 text-center relative overflow-hidden">
           <div className="absolute top-0 right-0 p-2">
-            <button onClick={() => { console.log('Edit Profile button clicked'); setIsEditingProfile(!isEditingProfile); }} className="p-2 bg-slate-800/80 rounded-full border border-slate-700 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors">
+            <button onClick={() => setIsEditingProfile(!isEditingProfile)} className="p-2 bg-slate-800/80 rounded-full border border-slate-700 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors">
               <UserCog size={18} />
             </button>
           </div>
