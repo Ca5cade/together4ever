@@ -13,8 +13,8 @@ export const CreatePost: React.FC<CreatePostProps> = ({ currentUser, onSubmit })
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      // Mock upload by creating a local object URL
-      const url = URL.createObjectURL(e.target.files[0]);
+      // Mock upload by creating a placeholder URL
+      const url = 'https://picsum.photos/800/600';
       setSelectedImage(url);
     }
   };
