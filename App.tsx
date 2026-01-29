@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Layout } from './components/Layout';
 import { CreatePost } from './components/CreatePost';
 import { PostCard } from './components/PostCard';
+import EditProfile from './components/EditProfile';
 import { 
   AppState, 
   User, 
@@ -21,7 +22,8 @@ import {
   Lock,
   Mail,
   ArrowRight,
-  Loader2
+  Loader2,
+  UserCog
 } from 'lucide-react';
 
 // --- Authentication Component ---
@@ -244,6 +246,7 @@ const App: React.FC = () => {
   });
   
   // UI State
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [replyingToPost, setReplyingToPost] = useState<Post | null>(null);
   const [selectedChatUser, setSelectedChatUser] = useState<string | null>(null);
   const [chatInput, setChatInput] = useState('');
@@ -598,12 +601,39 @@ const App: React.FC = () => {
   };
 
   const renderProfile = () => {
+    if (isEditingProfile) {
+      return <EditProfile 
+                user={state.currentUser!} 
+                onClose={() => setIsEditingProfile(false)}
+                onUpdate={async (updatedUser) => {
+                  if (state.currentUser) {
+                    try {
+                      const user = await api.updateUser(state.currentUser.id, updatedUser);
+                      setState(prev => ({
+                        ...prev,
+                        currentUser: user
+                      }));
+                    } catch (e) {
+                      console.error("Failed to update user", e);
+                      // Optionally: show an error message to the user
+                    }
+                  }
+                  setIsEditingProfile(false);
+                }} 
+             />;
+    }
+
     const user = state.currentUser!;
     const myPosts = state.posts.filter(p => p.userId === user.id).sort((a, b) => b.timestamp - a.timestamp);
 
     return (
       <div className="space-y-6">
         <div className="bg-slate-900 rounded-xl shadow-lg border border-slate-800 p-6 text-center relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-2">
+            <button onClick={() => setIsEditingProfile(!isEditingProfile)} className="p-2 bg-slate-800/80 rounded-full border border-slate-700 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors">
+              <UserCog size={18} />
+            </button>
+          </div>
           <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-slate-800 to-transparent opacity-50"></div>
           
           <div className="relative inline-block mx-auto mb-4">

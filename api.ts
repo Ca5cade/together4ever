@@ -71,5 +71,15 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ userId, friendId })
     });
+  },
+
+  updateUser: async (userId: string, payload: Partial<User>): Promise<User> => {
+    const res = await fetch(`${API_URL}/users/${userId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error('Failed to update user');
+    return res.json();
   }
 };

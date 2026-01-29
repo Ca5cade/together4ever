@@ -182,6 +182,30 @@ app.post('/api/friends', async (req, res) => {
   }
 });
 
+// Update User
+app.put('/api/users/:id', async (req, res) => {
+  const { id } = req.params;
+  const { bio, avatar } = req.body;
+  try {
+    const result = await pool.query(
+      'UPDATE users SET bio = $1, avatar = $2 WHERE id = $3 RETURNING *',
+      [bio, avatar, id]
+    );
+    if (result.rows.length > 0) {
+      // Fetch friends for the updated user
+      const friendsResult = await pool.query('SELECT friend_id FROM friends WHERE user_id = $1', [id]);
+      const user = result.rows[0];
+      user.friends = friendsResult.rows.map(row => row.friend_id);
+      res.json(user);
+    } else {
+      res.status(404).json({ error: 'User not found' });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Update user failed' });
+  }
+});
+
 // Fallback for SPA
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
